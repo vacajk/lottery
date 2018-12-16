@@ -36,7 +36,14 @@ var lotteryProject = function() {
 	];
 
 	this.init = function() {
-		this.users = users.split(",");
+        if(db_staff.isempty()) {
+		    this.users = users.split(",");
+        }
+        else {
+		    //this.users = users.split(",");
+            this.users = db_staff.staff_list().split(",")
+            console.log(this.users)
+        }
 		
 		var winnerList = db.list();
 		for(var i = 0, l = winnerList.length; i < l; i++) {

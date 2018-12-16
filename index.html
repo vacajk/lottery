@@ -32,16 +32,70 @@
 			</div>
 		</div>
 		
+		<div id="staff_list">
+			<div class="staff_title">员工名单</div>
+			<div class="staff_table">
+				<table>
+					<thead>
+						<th>姓名</th>
+						<th>工号</th>
+						<th>加入奖池</th>
+					</thead>
+					<tbody class="list">
+					</tbody>
+				</table>
+				
+                <div><a href="javascript:;" id="staff_load">加载抽奖名单</a></div>
+                <input id="staff_load_csv" type="file" name="staff_load_csvfile" style="display: none;"/>
+                <input id="staff_load_csv2db" type="button" onclick="csv()" style="display: none;"/>
+			</div>
+        </div>
+        
 		<div id="cover_up">
 			<div id="start_button_up">开始抽奖</div>
 		</div>
 		<div id="cover_bottom">
 			<div id="start_button_bottom">开始抽奖</div>
-		</div>
-		
+        </div>
+        
+        <!-- <input type="file" name="csvfile" />
+        <input type="button" onclick="csv()" value="JS转换"/>
+                
+        <br /><br /><br />
+        <div id="resTbl"></div> -->
+
+        <div id="resTbl"></div>
 		<script type="text/javascript" src="./js/jQuery.publicBox.js"></script>
 		<script type="text/javascript" src="./js/users.js"></script>
 		<script type="text/javascript" src="./js/lottery.js"></script>
+		<script type="text/javascript" src="./js/staff.js"></script>
 		<script type="text/javascript" src="./js/index.js"></script>
+        <!-- <script type="text/javascript" src="./lib/jquery.js"></script> -->
+        <script type="text/javascript" src="./lib/papaparse.js"></script>
+        <script type="text/javascript" src="./lib/jschardet.js"></script>
+        <script type="text/javascript" src="./js/csv2arr.js"></script>
+        
+        <script>
+            function csv(){
+                $("input[name=staff_load_csvfile]").csv2arr(function(arr){
+                    console.log( arr );
+
+                    for(var i in arr) {
+                        staff.staffListAdd({name:arr[i][0], number:arr[i][1], enable:arr[i][2]}, true)
+                    }
+
+                    //something to do here
+                    var tblStr = "<table border='1'>";
+                    $.each( arr, function(i, line){
+                        tblStr += "<tr>";
+                        $.each( line, function(i, cell){
+                            tblStr += "<td>"+cell+"</td>";
+                        });
+                        tblStr += "</tr>";
+                    });
+                    $("#resTbl").html( tblStr );
+                });
+            }
+        </script>
 	</body>
 </html>

@@ -5,7 +5,10 @@ canvas.height = 700;
 canvas.width = 700;
 
 var db = new localDatabase();
+var db_staff = new localDatabaseStaff();
 var lottery = new lotteryProject();
+var staff = new staffProject();
+staff.init();
 lottery.init();
 
 $(function() {
@@ -25,11 +28,27 @@ $(function() {
 	
 	$("#clear").click(function() {
 		$(this).miniConfirm({
-			msg:"确认清空名单吗?",
+			msg:"确认清空中奖名单吗?",
 			callback: function() {
 				db.clear();
 				$("#winner_list .winner_table tbody").empty();
 				$.fn.closePublicBox(0);
+			}
+		});
+    });
+    
+	$("#staff_load").click(function() {
+		$(this).miniConfirm({
+			msg:"确认重新加载员工名单吗?",
+			callback: function() {
+				db_staff.clear();
+				$("#staff_list .staff_table tbody").empty();
+                $.fn.closePublicBox(0);
+                $('#staff_load_csv').click()
+                // (function() {
+                //     $('#staff_load_csv2db').trigger("onclick");
+                // });
+                $('#staff_load_csv2db').click();
 			}
 		});
 	});
@@ -75,6 +94,23 @@ $(function() {
 		}
 	});
 	
+	$("#staff_list .staff_title").click(function() {
+		var tab = $("#staff_list .staff_table"),
+				$this = $(this);
+		
+		if(tab.is(":visible")) {
+			tab.slideUp(200, function() {
+				$this.animate({"left":"0px"}, 300);
+				$("#staff_list").animate({"right":"-180px"}, 300);
+			});
+		} else {
+			$this.animate({"left":"90px"}, 300);
+			$("#staff_list").animate({"right":"20px"}, 300, function() {
+				tab.slideDown(200);
+			});
+		}
+    });
+    
 	// 开始抽奖
 	$("#start_button_up, #start_button_bottom").click(function() {
 		
