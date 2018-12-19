@@ -55,6 +55,13 @@ var lotteryProject = function() {
 }
 
 lotteryProject.prototype = {
+    // 从数据库更新抽奖名单
+    refreshUser: function() {
+        this.users = db_staff.staff_list().split(",")
+        console.log(this.users)
+		this.count = this.users.length;
+    },
+
 	// 随机出 12个用户
 	randUsers: function() {
 		this.users.sort(function () { // 在取出用户前 先进行乱序排列，打乱顺序
