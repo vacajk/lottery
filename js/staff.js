@@ -31,8 +31,9 @@ staffProject.prototype = {
 		// 	+ '</td></tr>';
 
 		$("#staff_list .list").prepend(html);
-		
-		saveToDb && db_staff.set(obj.name, obj);
+        
+        key_name = 'staff-' + obj.name
+		saveToDb && db_staff.set(key_name, obj);
 	}
 };
 
@@ -40,20 +41,19 @@ staffProject.prototype = {
 class localDatabaseStaff {
     constructor() {
     }
-    staff_list() {
-        var staff_users = '';
-        for (var i =0, l = localStorage.length; i < l; i++) {
-            staff_users += localStorage.key(i).replace('\t', '') + ",";
-            //staff_users += "抽奖"+i+",";
-        }
-        staff_users = staff_users.substr(0, staff_users.length-1);
-        return staff_users;
-    }
     isempty() {
         if (localStorage.length == 0)
             return true
-        else
-            return false
+        else {
+            var k = '', cnt = 0
+            for (var i =0, l = localStorage.length; i < l; i++) {
+                k = localStorage.key(i);
+                if (k.indexOf('staff-') >= 0) {
+                    return false
+                }
+            }
+            return true
+        }
     }
     item(k) {
         var val = localStorage.getItem(k);
@@ -82,14 +82,23 @@ class localDatabaseStaff {
         var k ='', val = null, rList = [];
         for (var i =0, l = localStorage.length; i < l; i++) {
             k = localStorage.key(i);
-            val = this.item(k);
-            if (val)
-                rList.push(val);
+            if (k.indexOf('staff-') >= 0) {
+                val = this.item(k);
+                if (val)
+                    rList.push(val);
+                    // console.log(val);
+            }
         }
         return rList;
     }
     clear() {
-        localStorage.clear();
+        var k ='';
+        for (var i =0, l = localStorage.length; i < l; i++) {
+            k = localStorage.key(i);
+            if (k.indexOf('staff-') >= 0) {
+                this.del(k)
+            }
+        }
     }
     del(k) {
         localStorage.removeItem(k);

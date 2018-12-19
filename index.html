@@ -89,6 +89,9 @@
                     console.log( arr );
 
                     for(var i in arr) {
+                        arr[i][0].replace('\t', '')
+                        arr[i][1].replace('\t', '')
+                        arr[i][2].replace('\t', '')
                         staff.staffListAdd({name:arr[i][0], number:arr[i][1], enable:arr[i][2]}, true)
                     }
 

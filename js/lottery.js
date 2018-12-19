@@ -40,26 +40,26 @@ var lotteryProject = function() {
 		    this.users = users.split(",");
         }
         else {
-		    //this.users = users.split(",");
-            this.users = db_staff.staff_list().split(",")
-            console.log(this.users)
+		    this.refreshUser()
         }
 		
 		var winnerList = db.list();
 		for(var i = 0, l = winnerList.length; i < l; i++) {
 			this.winnerListAdd(winnerList[i]);
 		}
-		
-		this.count = this.users.length;
 	};
 }
 
 lotteryProject.prototype = {
     // 从数据库更新抽奖名单
     refreshUser: function() {
-        this.users = db_staff.staff_list().split(",")
-        console.log(this.users)
+        this.users = [];
+        user_list = db_staff.list()
+        for (var i=0; i<user_list.length; i++) {
+            this.users.push(user_list[i].name)
+        }
 		this.count = this.users.length;
+        console.log(this.users)
     },
 
 	// 随机出 12个用户
@@ -213,7 +213,8 @@ lotteryProject.prototype = {
 
 		$("#winner_list .list").prepend(html);
 		
-		saveToDb && db.set(obj.name, obj);
+        key_name = 'lottery-' + obj.name
+		saveToDb && db.set(key_name, obj);
 	},
 	
 	// 绘制
@@ -253,50 +254,61 @@ lotteryProject.prototype = {
 };
 
 // 本地 key-value 数据库操作
-var localDatabase = function() {
-	
-	
+class localDatabase {
+    constructor() {
+    }
+    item(k) {
+        var val = localStorage.getItem(k);
+        if (!val)
+            return null;
+        try {
+            val = JSON.parse(val);
+        }
+        catch (e) {
+            console.log(e);
+            val = val;
+        }
+        return val;
+    }
+    set(k, val) {
+        try {
+            if (typeof (val) != 'string')
+                val = JSON.stringify(val);
+            localStorage.setItem(k, val);
+        }
+        catch (e) {
+            console.log(e);
+        }
+    }
+    list() {
+        var k = '', val = null, rList = [];
+        for (var i = 0, l = localStorage.length; i < l; i++) {
+            k = localStorage.key(i);
+            val = this.item(k);
+            if (k.indexOf('lottery-') >= 0) {
+                val = this.item(k);
+                if (val)
+                    rList.push(val);
+                    // console.log(val);
+            }
+        }
+        return rList;
+    }
+    clear() {
+        var k ='';
+        for (var i =0, l = localStorage.length; i < l; i++) {
+            k = localStorage.key(i);
+            if (k.indexOf('lottery-') >= 0) {
+                this.del(k)
+            }
+        }
+    }
+    del(k) {
+        localStorage.removeItem(k);
+    }
 }
 
-localDatabase.prototype.item = function(k) {
-	var val = localStorage.getItem(k);
-	if(!val) return null;
-	
-	try{
-		val = JSON.parse(val);
-	} catch(e) {
-		console.log(e);
-		val = val;
-	}
-	
-	return val;
-};
 
-localDatabase.prototype.set = function(k, val) {
-	try{
-		if(typeof(val) != 'string') val = JSON.stringify(val);
-		
-		localStorage.setItem(k, val);
-	} catch(e) {
-		console.log(e);
-	}
-};
 
-localDatabase.prototype.list = function() {
-	var k = '', val = null, rList = [];
-	for(var i = 0, l = localStorage.length; i < l; i++) {
-		k = localStorage.key(i);
-		val = this.item(k);
-		if(val) rList.push(val);
-	}
-	
-	return rList;
-};
 
-localDatabase.prototype.clear = function() {
-	localStorage.clear();
-};
 
-localDatabase.prototype.del = function(k) {
-	localStorage.removeItem(k);
-};

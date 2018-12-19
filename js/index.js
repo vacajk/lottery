@@ -41,9 +41,10 @@ $(function() {
 		$(this).miniConfirm({
 			msg:"确认重新加载员工名单吗?",
 			callback: function() {
+				db_staff.clear();
+				$("#staff_list .staff_table tbody").empty();
                 $.fn.closePublicBox(0);
                 $('#staff_load_csv').click()
-                $('#staff_load_csv2db').click();
 			}
 		});
 	});
@@ -52,8 +53,6 @@ $(function() {
 		$(this).miniConfirm({
 			msg:"确认重新更新员工名单吗?",
 			callback: function() {
-				db_staff.clear();
-				$("#staff_list .staff_table tbody").empty();
                 $.fn.closePublicBox(0);
                 $('#staff_load_csv2db').click();
 			}
