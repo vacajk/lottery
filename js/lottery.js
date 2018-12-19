@@ -20,8 +20,8 @@ var lotteryProject = function() {
 	this.winner = -1;
 	
 	this.nowIndex = 0;
-	this.minSpeed = 1000;
-	this.maxSpeed = 40;
+	this.minSpeed = 600;
+	this.maxSpeed = 30;
 	this.acceleration = 80;
 	this.speedMode = true;
 	this.speed = this.minSpeed;
@@ -29,10 +29,10 @@ var lotteryProject = function() {
 	this.allowStop = false;
 	
 	this.colors = [
-		"#50BEFA", "#CE52F8", "#CE52F8",
-		"#50BEFA", "#CE52F8", "#CE52F8",
-		"#50BEFA", "#CE52F8", "#CE52F8",
-		"#50BEFA", "#CE52F8", "#CE52F8"
+		"#50BEFA", "#CE52F8", "#BCEE68",
+		"#50BEFA", "#CE52F8", "#BCEE68",
+		"#50BEFA", "#CE52F8", "#BCEE68",
+		"#50BEFA", "#CE52F8", "#BCEE68"
 	];
 
 	this.init = function() {
@@ -219,7 +219,7 @@ lotteryProject.prototype = {
 				if(k < m) _this.create(k, _this.colors[k]);
 				else if(k == m) _this.whirling();
 				k++;
-			}, 700*i);
+			}, 250*i);
 		}
 	},
 	
@@ -227,7 +227,7 @@ lotteryProject.prototype = {
 		if(this.runing) return;
 		this.runing = true;
 		
-		this.acceleration = Math.floor( Math.random()*60+60 ); // 加速度 60-120
+		this.acceleration = Math.floor( Math.random()*60+40 ); // 加速度 40-100
 		this.speedMode = true;
 		this.allowStop = false;
 		this.winner = -1;
