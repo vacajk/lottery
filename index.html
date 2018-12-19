@@ -4,11 +4,18 @@
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
 		<title>抽奖</title>
 		<link rel="stylesheet" href="./css/style.css" />
-		<script type="text/javascript" src="./js/jquery-1.7.1.min.js"></script>
+        <script type="text/javascript" src="./js/jquery-1.7.1.min.js"></script>
+        <script type="text/javascript">
+            function clickkey()
+            {
+                document.getElementById('stop_button').accessKey="w"
+            }
+        </script>
 	</head>
 	
-	<body>
-		
+    <body onload="clickkey()">
+    <body>
+
 		<div id="user_list" class="user_list">
 			<canvas id="tutorial"></canvas>
 			
@@ -45,7 +52,8 @@
 					</tbody>
 				</table>
 				
-                <div><a href="javascript:;" id="staff_load">加载抽奖名单</a></div>
+                <div><a href="javascript:;" id="staff_load">加载名单</a></div>
+                <div><a href="javascript:;" id="staff_refresh">更新名单</a></div>
                 <input id="staff_load_csv" type="file" name="staff_load_csvfile" style="display: none;"/>
                 <input id="staff_load_csv2db" type="button" onclick="csv()" style="display: none;"/>
 			</div>
