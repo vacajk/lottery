@@ -14,7 +14,7 @@ lottery.init();
 $(function() {
 	$("#stop_button").click(function() {
 		if(lottery.allowStop) {
-			$(this).find("a").html("在来一次").css({"font-size":"80px", "margin-top":"35px"});
+			$(this).find("a").html("再来一次").css({"font-size":"80px", "margin-top":"35px"});
 			
 			lottery.stop();
 		} else if(!lottery.runing) {

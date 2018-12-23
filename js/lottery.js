@@ -35,6 +35,17 @@ var lotteryProject = function() {
 		"#50BEFA", "#CE52F8", "#BCEE68"
 	];
 
+    this.winColors = ['#ff00ff', '#ffff00', '#00ffff', '#ff0000', '#35E854', '#4E8FFE'];
+
+    this.fill_images = [
+        "./images/five_element_metal_r.jpg",
+        "./images/five_element_wood_r.jpg",
+        "./images/five_element_water_r.jpg",
+        "./images/five_element_fire_r.jpg",
+        "./images/five_element_earth_r.jpg",
+        "./images/five_element_all_r.jpg"
+    ];
+
 	this.init = function() {
         if(db_staff.isempty()) {
 		    this.users = users.split(",");
@@ -69,6 +80,7 @@ lotteryProject.prototype = {
 		});
   	
 		this.usernames = [];
+        this.user_five_element = true;
 		var keys = {}, k = 0, u = '', len = 0;
 		
 		while(true) {
@@ -76,6 +88,14 @@ lotteryProject.prototype = {
 			u = this.users[k];
 			
 			if(!keys[k] && !db.item(u)) {
+                if (this.user_five_element && 
+                    (u.indexOf('金') < 0) &&
+                    (u.indexOf('木') < 0) &&
+                    (u.indexOf('水') < 0) &&
+                    (u.indexOf('火') < 0) &&
+                    (u.indexOf('土') < 0))
+                    this.user_five_element = false;
+
 				len = this.usernames.push(u);
 				keys[k] = k;
 				
@@ -85,8 +105,28 @@ lotteryProject.prototype = {
 		
 	},
 	
+	create: function(i, color_type, isWin) {
+        if (color_type == 0)
+            color = this.colors[i];
+        else if (color_type == 1)
+            color = this.createHoverColor();
+        else if (color_type == 2)
+            color = "white";
+        else if (color_type == 3)
+            color = this.createWinColor()
+        
+        if (this.user_five_element) {
+            if (color_type == 0)
+                this.create_five_element(i, isWin)
+            else if ((color_type == 1) || (color_type == 2) || (color_type == 3))
+                this.create_five_element_cursor(i, color, isWin)
+        }
+        else
+            this.create_color(i, color, isWin)
+    },
+
 	// 绘制格子
-	create: function(i, color, isWin) {
+	create_color: function(i, color, isWin) {
 		var start = 0.1666*i+this.arcRecoup,
 				finish = 0.1666*(i+1)-0.01+this.arcRecoup; 
 		
@@ -111,6 +151,82 @@ lotteryProject.prototype = {
 		this.drawFont(i, start, isWin);
 	},
 	
+	create_five_element_cursor: function(i, color, isWin) {
+		//TODO: change cursor from circle to cursor.
+		var start = 0.1666*i+this.arcRecoup,
+				finish = 0.1666*(i+1)-0.01+this.arcRecoup;
+                
+        var ratio = this.radius*0.61;
+
+        origin_x = this.mx;
+        origin_y = this.my;
+        rotate_r = Math.PI*((start + finish)/2);
+
+        ctx.translate(origin_x, origin_y);
+        ctx.rotate(rotate_r)
+		ctx.fillStyle = color;
+		ctx.beginPath();
+		ctx.arc(ratio, 0, 10, 0, 2*Math.PI);
+        ctx.fill();
+        ctx.stroke();
+        ctx.rotate(-rotate_r)
+        ctx.translate(-origin_x, -origin_y);
+    },
+
+    create_five_element: function(i, isWin) {
+
+        var img = new Image();
+        var fe_index=0;
+        if(this.usernames[i].indexOf('金') >= 0)
+            fe_index = 0;
+        else if(this.usernames[i].indexOf('木') >= 0)
+            fe_index = 1;
+        else if(this.usernames[i].indexOf('水') >= 0)
+            fe_index = 2;
+        else if(this.usernames[i].indexOf('火') >= 0)
+            fe_index = 3;
+        else if(this.usernames[i].indexOf('土') >= 0)
+            fe_index = 4;
+
+        start = 0.1666*i+this.arcRecoup,
+        finish = 0.1666*(i+1)-0.01+this.arcRecoup;
+        s1 = Math.sin(Math.PI*start), c1 = Math.cos(Math.PI*start),
+        s2 = Math.sin(Math.PI*finish), c2 = Math.cos(Math.PI*finish);
+
+        ratio = this.radius/this.proportion,
+        point = {x: this.mx + ratio*c1, y: this.my + ratio*s1},
+        lineTo1 = {x: this.mx + this.radius*c1, y: this.my + this.radius*s1},
+        lineTo2 = {x: this.mx + ratio*c2, y: this.my + ratio*s2};
+
+        ctx.beginPath();
+        ctx.moveTo(point.x, point.y);
+        ctx.lineTo(lineTo1.x, lineTo1.y);
+        ctx.arc(this.mx, this.my, this.radius, Math.PI*start, Math.PI*finish); // 外圈
+        ctx.lineTo(lineTo2.x, lineTo2.y);
+        ctx.arc(this.mx, this.my, ratio, Math.PI*finish, Math.PI*start, true); // 内圈
+        ctx.lineTo(point.x, point.y);
+
+        origin_x = this.mx;
+        origin_y = this.my;
+        rotate_r = Math.PI*(start);
+		var _this = this;
+        img.src = this.fill_images[fe_index];
+        img.onload = function() {
+            var pattern = ctx.createPattern(img,"no-repeat");
+            ctx.fillStyle = pattern;
+            //填充必须放于加载完成后执行，因为onload为异步操作
+            ctx.translate(origin_x, origin_y)
+            ctx.rotate(rotate_r)
+            ctx.fill();
+            ctx.rotate(-rotate_r)
+            ctx.translate(-origin_x, -origin_y)
+            _this.drawFont(i, start, isWin);
+            //console.log("onload");
+        }
+        // console.log(i + this.usernames[i]);
+        // console.log(this.fill_images[fe_index]);
+    },
+
 	// 绘制文字
 	drawFont: function(i, start, isWin) {
 		ctx.fillStyle = isWin ? "#f00" : "#333";
@@ -151,8 +267,15 @@ lotteryProject.prototype = {
 			}
 		}
 		
-		this.create(fontIndex, this.colors[fontIndex]);
-		this.create(this.nowIndex, this.createHoverColor());
+        if (this.user_five_element == false) {
+            this.create(fontIndex, 0);
+            this.create(this.nowIndex, 1);
+        }
+        else {
+            this.create(fontIndex, 2);
+            this.create(this.nowIndex, 1);
+        }
+
 		this.nowIndex++;
 		
 		var _this = this;
@@ -176,17 +299,25 @@ lotteryProject.prototype = {
 		return colorList[this.nowColorIndex];
 	},
 	
+    nowWinColorIndex: 0,
+	createWinColor: function() {
+		this.nowWinColorIndex++;
+		this.nowWinColorIndex = this.nowWinColorIndex % this.winColors.length;
+		
+		return this.winColors[this.nowWinColorIndex];
+    },
+
 	// 显示获胜者
 	showWinner: function() {
-		var winColors = ['#ff00ff', '#ffff00', '#00ffff', '#ff0000', '#35E854', '#4E8FFE'];
-		var i = 0, time = 0, _this = this;
+        var i = 0, time = 0, _this = this;
+        nowWinColorIndex = 0;
 		time = setInterval(function() {
-			_this.create(_this.winner, winColors[i%6]);
+			_this.create(_this.winner, 3);
 			i++;
 			
 			if(i > 16) {
 				clearTimeout(time);
-				_this.create(_this.winner, winColors[1], true);
+				_this.create(_this.winner, 3, true);
 				_this.runing = false;
 			}
 		}, 100);
@@ -224,7 +355,7 @@ lotteryProject.prototype = {
 		var m = 12, _this = this, k = 0;
 		for(var i = 0; i <= m; i++) {
 			setTimeout(function() {
-				if(k < m) _this.create(k, _this.colors[k]);
+				if(k < m) _this.create(k, 0);
 				else if(k == m) _this.whirling();
 				k++;
 			}, 250*i);
