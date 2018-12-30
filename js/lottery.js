@@ -322,7 +322,7 @@ lotteryProject.prototype = {
 			}
 		}, 100);
 		
-		this.winnerListAdd({name:this.usernames[this.winner], level:this.nowLevel}, true);
+		this.winnerListAdd({name:this.usernames[this.winner], level:this.nowLevel.toString()}, true);
 	},
 	
 	winnerListAdd: function(obj, saveToDb) {
