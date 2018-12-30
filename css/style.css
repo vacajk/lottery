@@ -73,7 +73,7 @@ a:active{}
 
 #winner_list{
 	width:240px;
-	top:20px;
+	top:80px;
 	right:-180px;
 }
 #winner_list:active{
@@ -125,7 +125,7 @@ a:active{}
 
 #staff_list{
 	width:240px;
-	top:80px;
+	top:20px;
 	right:-180px;
 }
 #staff_list:active{

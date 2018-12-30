@@ -79,8 +79,9 @@ $(function() {
 	$("select.level").live("change", function() {
 		var n = $(this).parents("tr").find("td:eq(0)").attr("name"),
 				l = $(this).val();
-
-		db.set(n, {name:n, level:l});
+        key = "lottery-" + n
+        value = {name:n, level:l}
+		db.set(key, value);
 	});
 	
 	$("#winner_list .winner_title").click(function() {

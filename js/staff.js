@@ -1,6 +1,4 @@
 var staffProject = function() {
-    this.levels = ['幸运奖', '三等奖', '二等奖', '一等奖', '特等奖'];
-    
     this.init = function() {
         var staffList = db_staff.list();
         
