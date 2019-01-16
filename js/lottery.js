@@ -327,7 +327,11 @@ lotteryProject.prototype = {
         var daxiao = "./data/music_winner.wav";
         var daxiao = new Audio(daxiao);
         daxiao .play();
-		this.winnerListAdd({name:this.usernames[this.winner], level:this.nowLevel.toString()}, true);
+        name = this.usernames[this.winner]
+        number = db_staff.item('staff-'+name).number
+        level = this.nowLevel.toString()
+        console.log("winner name:" + name + " number" + number + " prize" + level)
+		this.winnerListAdd({name:name, number:number, level:level}, true);
 	},
 	
 	winnerListAdd: function(obj, saveToDb) {
@@ -342,6 +346,10 @@ lotteryProject.prototype = {
 			var s = i == obj.level ? ' selected="selected"' : '';
 			html += '<option value="'+i+'"'+s+'>'+this.levels[i]+'</option>';
 		}
+
+        html += '<td number="'+obj.number+'">'
+        + obj.number
+        + '</td>'
 
 		html += '</select></td>'
 			+ '<td><a href="javascript:;" class="del">删除</a>'

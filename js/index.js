@@ -77,11 +77,13 @@ $(function() {
 	});
 	
 	$("select.level").live("change", function() {
-		var n = $(this).parents("tr").find("td:eq(0)").attr("name"),
-				l = $(this).val();
-        key = "lottery-" + n
-        value = {name:n, level:l}
-		db.set(key, value);
+		var name = $(this).parents("tr").find("td:eq(0)").attr("name"),
+		    number = $(this).parents("tr").find("td:eq(2)").attr("number"),
+				level = $(this).val();
+        key = "lottery-" + name
+        value = {name:name, number:number, level:level}
+        db.set(key, value);
+        console.log("change prize name:" + name + " number" + number + " prize" + level)
 	});
 	
 	$("#winner_list .winner_title").click(function() {
