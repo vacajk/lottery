@@ -265,6 +265,9 @@ lotteryProject.prototype = {
 			if(this.speed > this.minSpeed) {
 				this.winner = this.nowIndex;
 			}
+            var daxiao = "./data/music_rolling.wav";
+            var daxiao = new Audio(daxiao);
+            daxiao .play();
 		}
 		
         if (this.user_five_element == false) {
@@ -320,8 +323,10 @@ lotteryProject.prototype = {
 				_this.create(_this.winner, 3, true);
 				_this.runing = false;
 			}
-		}, 100);
-		
+        }, 100);
+        var daxiao = "./data/music_winner.wav";
+        var daxiao = new Audio(daxiao);
+        daxiao .play();
 		this.winnerListAdd({name:this.usernames[this.winner], level:this.nowLevel.toString()}, true);
 	},
 	
