@@ -93,8 +93,8 @@ lotteryProject.prototype = {
 		while(true) {
 			k = Math.floor( Math.random()*this.count );
 			u = this.users[k];
-			
-			if(!keys[k] && !db.item(u)) {
+			u_d = "lottery-" + u
+			if(!keys[k] && !db.item(u_d)) {
                 if (this.user_five_element && 
                     (u.indexOf('金') < 0) &&
                     (u.indexOf('木') < 0) &&
