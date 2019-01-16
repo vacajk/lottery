@@ -58,6 +58,13 @@ var lotteryProject = function() {
 		for(var i = 0, l = winnerList.length; i < l; i++) {
 			this.winnerListAdd(winnerList[i]);
 		}
+
+        var html = '';
+        for(var i = 0, l = this.levels.length; i < l; i++) {
+            var s = i == 0 ? ' selected="selected"' : '';
+            html += '<option value="'+i+'"'+s+'>'+this.levels[i]+'</option>';
+        }
+        $("#winner_list .prize").prepend(html);
 	};
 }
 

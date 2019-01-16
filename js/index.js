@@ -86,6 +86,12 @@ $(function() {
         console.log("change prize name:" + name + " number" + number + " prize" + level)
 	});
 	
+    $("select.prize").live("change", function() {
+        var new_level = $(this).val()
+        lottery.nowLevel = new_level
+        console.log("change current prize to " + new_level)
+    });
+
 	$("#winner_list .winner_title").click(function() {
 		var tab = $("#winner_list .winner_table"),
 				$this = $(this);
